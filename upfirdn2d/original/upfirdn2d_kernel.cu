@@ -132,6 +132,7 @@ __global__ void upfirdn2d_kernel(scalar_t *out, const scalar_t *input,
 		int		 kx = tap_idx - ky * kernel_w;
 		scalar_t v	= 0.0;
 
+		// Redundant check
 		if (kx < p.kernel_w & ky < p.kernel_h) {
 			v = kernel[(p.kernel_h - 1 - ky) * p.kernel_w + (p.kernel_w - 1 - kx)];
 		}

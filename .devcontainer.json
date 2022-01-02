@@ -1,11 +1,24 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
+	"dockerFile": "Dockerfile",
+	"context": ".",
+	"runArgs": [
+		"--shm-size=1g",
+		"--gpus",
+		"all",
+		"--ulimit",
+		"memlock=-1",
+		"--ulimit",
+		"stack=67108864"
 	],
-	"remoteAuthority": "wsl+Ubuntu",
+	"extensions": [
+		"ms-python.vscode-pylance",
+		"ms-python.python",
+		"ms-vscode.cpptools",
+		"ms-vscode.cpptools-extension-pack",
+		"nvidia.nsight-vscode-edition"
+	],
 	"settings": {
+		"terminal.integrated.automationShell.linux": "/bin/bash",
 		"C_Cpp.default.includePath": [
 			"/opt/conda/lib/python3.8/site-packages/torch/include/torch/csrc/api/include/",
 			"/opt/conda/lib/python3.8/site-packages/torch/include/",
@@ -15,8 +28,6 @@
 		"python.analysis.typeCheckingMode": "basic",
 		"python.analysis.diagnosticSeverityOverrides": {
 			"reportPrivateImportUsage": "none"
-		},
-		"jupyter.jupyterServerType": "remote",
-		"jupyter.allowUnauthorizedRemoteConnection": true,
-	}
+		}
+	},
 }

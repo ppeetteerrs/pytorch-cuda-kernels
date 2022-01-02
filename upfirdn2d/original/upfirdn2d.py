@@ -146,7 +146,7 @@ class UpFirDn2d(Function):
         return grad_input, None, None, None, None
 
 
-def upfirdn2d_original(input, kernel, up=1, down=1, pad=(0, 0)):
+def upfirdn2d(input, kernel, up=1, down=1, pad=(0, 0)):
     if not isinstance(up, abc.Iterable):
         up = (up, up)
 

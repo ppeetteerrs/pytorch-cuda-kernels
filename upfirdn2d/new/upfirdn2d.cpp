@@ -12,12 +12,13 @@
 torch::Tensor upfirdn2d_op(const torch::Tensor& input,
 						   const torch::Tensor& kernel, int up_x, int up_y,
 						   int down_x, int down_y, int pad_x0, int pad_x1,
-						   int pad_y0, int pad_y1);
+						   int pad_y0, int pad_y1, bool force_generic);
 
 // Python function definition
 torch::Tensor upfirdn2d(const torch::Tensor& input, const torch::Tensor& kernel,
 						int up_x, int up_y, int down_x, int down_y, int pad_x0,
-						int pad_x1, int pad_y0, int pad_y1) {
+						int pad_x1, int pad_y0, int pad_y1,
+						bool force_generic = false) {
 	// Check input validity
 	CHECK_INPUT(input);
 	CHECK_INPUT(kernel);
@@ -26,7 +27,7 @@ torch::Tensor upfirdn2d(const torch::Tensor& input, const torch::Tensor& kernel,
 	at::DeviceGuard guard(input.device());
 
 	return upfirdn2d_op(input, kernel, up_x, up_y, down_x, down_y, pad_x0,
-						pad_x1, pad_y0, pad_y1);
+						pad_x1, pad_y0, pad_y1, force_generic);
 }
 
 // Defines function upfirdn2d inside Pytorch extension

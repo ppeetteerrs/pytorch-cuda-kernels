@@ -235,7 +235,7 @@ __global__ void upfirdn2d_kernel(scalar_t* out, const scalar_t* input,
 torch::Tensor upfirdn2d_op(const torch::Tensor& input,
 						   const torch::Tensor& kernel, int up_x, int up_y,
 						   int down_x, int down_y, int pad_x0, int pad_x1,
-						   int pad_y0, int pad_y1) {
+						   int pad_y0, int pad_y1, bool force_generic) {
 	/**
 	 * Code in original source, but already removed in NVIDIA's newest
 	 *implementation, should be useless int curDevice = -1;
@@ -277,15 +277,17 @@ torch::Tensor upfirdn2d_op(const torch::Tensor& input,
 	// Select kernel to use
 	int mode = -1;
 
-	if (p.up_x == 1 && p.up_y == 1 && p.down_x == 1 && p.down_y == 1 &&
-		p.kernel_h == 4 && p.kernel_w == 4) {
-		mode = 1;
-	} else if (p.up_x == 2 && p.up_y == 2 && p.down_x == 1 && p.down_y == 1 &&
-			   p.kernel_h == 4 && p.kernel_w == 4) {
-		mode = 2;
-	} else if (p.up_x == 1 && p.up_y == 1 && p.down_x == 2 && p.down_y == 2 &&
-			   p.kernel_h == 4 && p.kernel_w == 4) {
-		mode = 3;
+	if (!force_generic) {
+		if (p.up_x == 1 && p.up_y == 1 && p.down_x == 1 && p.down_y == 1 &&
+			p.kernel_h == 4 && p.kernel_w == 4) {
+			mode = 1;
+		} else if (p.up_x == 2 && p.up_y == 2 && p.down_x == 1 &&
+				   p.down_y == 1 && p.kernel_h == 4 && p.kernel_w == 4) {
+			mode = 2;
+		} else if (p.up_x == 1 && p.up_y == 1 && p.down_x == 2 &&
+				   p.down_y == 2 && p.kernel_h == 4 && p.kernel_w == 4) {
+			mode = 3;
+		}
 	}
 
 	dim3 block_size;

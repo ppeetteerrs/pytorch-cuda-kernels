@@ -1,6 +1,6 @@
 import os
 from collections import abc
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, Union
 
 import torch
 from torch import Tensor
@@ -112,6 +112,7 @@ class UpFirDn2d(Function):
         up: Tuple[int, int],
         down: Tuple[int, int],
         pad: Tuple[int, int, int, int],
+        force_generic: bool,
     ) -> Tensor:
         # Destructuring
         up_x, up_y = up
@@ -148,7 +149,17 @@ class UpFirDn2d(Function):
 
         # Apply kernel
         out = upfirdn2d_op.upfirdn2d(
-            input, kernel, up_x, up_y, down_x, down_y, pad_x0, pad_x1, pad_y0, pad_y1
+            input,
+            kernel,
+            up_x,
+            up_y,
+            down_x,
+            down_y,
+            pad_x0,
+            pad_x1,
+            pad_y0,
+            pad_y1,
+            force_generic,
         ).view(-1, channel, out_h, out_w)
 
         return out
@@ -179,7 +190,14 @@ class UpFirDn2d(Function):
         return grad_input, None, None, None, None
 
 
-def upfirdn2d(input: Tensor, kernel: Tensor, up=1, down=1, pad=(0, 0)):
+def upfirdn2d(
+    input: Tensor,
+    kernel: Tensor,
+    up: Union[int, Tuple[int, int]] = 1,
+    down: Union[int, Tuple[int, int]] = 1,
+    pad: Union[Tuple[int, int], Tuple[int, int, int, int]] = (0, 0),
+    force_generic: bool = False,
+) -> Tensor:
 
     if not isinstance(up, abc.Iterable):
         up = (up, up)
@@ -190,6 +208,6 @@ def upfirdn2d(input: Tensor, kernel: Tensor, up=1, down=1, pad=(0, 0)):
     if len(pad) == 2:
         pad = (pad[0], pad[1], pad[0], pad[1])
 
-    out = UpFirDn2d.apply(input, kernel, up, down, pad)
+    out = UpFirDn2d.apply(input, kernel, up, down, pad, force_generic)
 
     return out

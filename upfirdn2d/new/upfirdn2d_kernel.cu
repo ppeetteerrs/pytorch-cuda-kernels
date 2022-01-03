@@ -300,7 +300,7 @@ torch::Tensor upfirdn2d_op(const torch::Tensor& input,
         grid_size  = dim3(ceil_div(p.out_w, 32), ceil_div(p.out_h, 32),
                           ceil_div(p.n, p.loop_n));
     } else {
-        p.loop_n   = max(ceil_div(p.n, 16384), 10);
+        p.loop_n   = max(ceil_div(p.n, 16384), 8);
         block_size = dim3(32, 32, 1);
         grid_size =
             dim3(ceil_div(p.out_w, block_size.x),

@@ -1,0 +1,12 @@
+{
+	"files.associations": {
+		"*.cc": "cpp",
+		"*.hh": "cpp",
+		"*.cc.inc": "cpp",
+		"*.hh.inc": "cpp",
+		"SCons*": "python",
+		"*.md": "markdown",
+		"*.mdx": "markdown",
+		"algorithm": "cpp"
+	}
+}

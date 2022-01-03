@@ -11,9 +11,13 @@ k = torch.tensor([1, 2, 3, 4], dtype=torch.float32, device="cuda")
 k = k[None, :] * k[:, None]
 
 # Check results
-original_result = original(random_img, k, up=2, down=1, pad=(0, 0))
+original_result = original(random_img, k, up=1, down=1, pad=(2, 2))
 print(original_result)
-new_result = new(random_img, k, up=2, down=1, pad=(0, 0))
+new_result = new(random_img, k, up=1, down=1, pad=(2, 2))
 print(new_result)
 
-print(f" CHECK {'SUCCEEDED' if new_result.allclose(i1) else 'FAILED'} ".center(80, "-"))
+print(
+    f" CHECK {'SUCCEEDED' if new_result.allclose(original_result) else 'FAILED'} ".center(
+        80, "-"
+    )
+)

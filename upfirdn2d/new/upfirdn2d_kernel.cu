@@ -100,7 +100,7 @@ __global__ void upfirdn2d_kernel_generic(scalar_t* out, const scalar_t* input,
         const int x_py = p.in_w - w * x_px;
         const int k_py = -p.up_y * p.kernel_w - w * k_px;
 
-        scalar_t v = 0.0f;
+        scalar_t v = 0.0;
 
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
@@ -189,10 +189,15 @@ __global__ void upfirdn2d_kernel(scalar_t* out, const scalar_t* input,
             int in_x     = rel_in_x + tile_in_x;
             int in_y     = rel_in_y + tile_in_y;
 
+            scalar_t v = 0.0;
+
             if (in_x >= 0 & in_y >= 0 & in_x < p.in_w & in_y < p.in_h) {
-                sx[rel_in_y][rel_in_x] =
-                    input[(tile_out_n * p.in_h + in_y) * p.in_w + in_x];
+                v = input[(tile_out_n * p.in_h + in_y) * p.in_w + in_x];
             }
+
+            // Imperative to initialize all tensor elements to 0 if not
+            // covered by input
+            sx[rel_in_y][rel_in_x] = v;
         }
 
         __syncthreads();
